@@ -13,4 +13,4 @@
 2. I am interested in learning about new programming languages
 
 A meme that captures how I currently feel about my university studies is:<br>
-![]([https://c.tenor.com/8druEACXtX8AAAAd/tenor.gif](https://media.tenor.com/DkLuqx5rQcUAAAAM/cat.gif))
+![](https://c.tenor.com/8druEACXtX8AAAAd/tenor.gif](https://media.tenor.com/DkLuqx5rQcUAAAAM/cat.gif))
