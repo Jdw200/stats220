@@ -1,0 +1,110 @@
+---
+title: Observing Phone Use at the Train Station
+output: html_fragment
+---
+
+<style>
+  body {
+    font-family: 'Open Sans', sans-serif;
+    color: #444;
+    background-color: #fff;
+    padding: 30px;
+    line-height: 1.6;
+  }
+  h2 {
+    color: #2C3E50;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 6px;
+    margin-top: 30px;
+  }
+  h3 {
+    margin-top: 24px;
+    color: #3C3C3C;
+  }
+  code, pre {
+    background-color: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 0.95em;
+  }
+  pre {
+    padding: 10px;
+    overflow-x: auto;
+  }
+  table {
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: left;
+  }
+</style>
+
+## Introduction
+
+This report explores phone usage behaviour at a train station based on 21 observational entries made at New Lynn train station, and Parnell train station (I know because I entered them). Data was collected over two weeks, with a focus on identifying mobile phone use trends, at the station, and to see if this had any correlation with the day of the week.
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+```{r load_data, echo=FALSE, message=FALSE}
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQI3erMvUx_DuIV_Z1HvnmxVvARp7E2AFieqcmjUZyUH5W2VDfqHoF3PzYJoBu8iNWl4swCpE7lSbE4/pub?gid=831867210&single=true&output=csv")
+
+latest_data <- logged_data %>%
+  rename(
+    timestamp = 1,
+    total_people = 2,
+    phone_users = 3,
+    day = 4
+  )
+
+percent_on_phone <- round((latest_data[[3]] / latest_data[[2]]) * 100, 1)
+latest_data <- latest_data %>% mutate(percent_on_phone = percent_on_phone)
+
+# Summary values
+max_percent_people_on_phone <- max(latest_data$percent_on_phone)
+min_percent_people_on_phone <- min(latest_data$percent_on_phone)
+average_percent_people_on_phone <- mean(latest_data$percent_on_phone)
+
+# Daily averages
+monday_avg <- mean(latest_data$percent_on_phone[latest_data$day == "Monday"])
+tuesday_avg <- mean(latest_data$percent_on_phone[latest_data$day == "Tuesday"])
+wednesday_avg <- mean(latest_data$percent_on_phone[latest_data$day == "Wednesday"])
+thursday_avg <- mean(latest_data$percent_on_phone[latest_data$day == "Thursday"])
+friday_avg <- mean(latest_data$percent_on_phone[latest_data$day == "Friday"])
+
+averages <- c(monday_avg, tuesday_avg, wednesday_avg, thursday_avg, friday_avg)
+day_names_in_order <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+```
+
+## Summary Statistics
+
+The minimum percentage of people using their phones during observation was **`r min_percent_people_on_phone`%**, and the maximum was **`r max_percent_people_on_phone`%**.
+
+The average percentage of people on their phones when I was at the stations was **`r round(average_percent_people_on_phone, 1)`%**, which I feel is quite high. 
+
+## Graph 1: Average Phone Use by Day
+
+```{r bar1, echo=FALSE}
+bar1 <- ggplot() +
+  geom_bar(aes(x = day_names_in_order, y = averages), stat = "identity", fill = "steelblue") +
+  labs(title = "Average Phone Use by Weekday", x = "Weekday", y = "Average % on Phone")
+bar1
+```
+
+## Graph 2: Number of Observations per Day
+
+```{r bar2, echo=FALSE}
+bar2 <- ggplot(data = latest_data) +
+  geom_bar(aes(x = day), fill = "darkorange") +
+  labs(title = "Number of Observations by Day", x = "Day of the Week", y = "Count of Observations")
+bar2
+```
+
+## To quickly summarize:
+
+These graphs illustrate both the level of phone usage at the train station and the fact that data collection was relatively consistent, and no Day was heavily observed compared to the others.
